@@ -24,9 +24,10 @@
 						Comment</a>
 				</div>
 				<hr>
-				<% campground.comments.forEach(function(comment){ %>
+				
 				<div class="row">
 					<div class="col-mid-12">
+						<% campground.comments.forEach(function(comment){ %>
 						<strong><%= comment.author %></strong>
 						<span class="pull-right">10 days ago</span>
 						<p>
