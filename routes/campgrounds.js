@@ -49,7 +49,7 @@ router.get("/new", isLoggedIn, function(req, res){
 });
 
 //SHOW - show more info about one campground
-router .get("/:id", function(req, res){
+router.get("/:id", function(req, res){
 	//find the campground with the provided ID
 	Campground.findById(req.params.id).populate("comments").exec(function(err, foundCampground){
 		if(err){
@@ -61,6 +61,32 @@ router .get("/:id", function(req, res){
 		}
 	});
 });
+
+//Edit Campground Route
+router.get("/:id/edit", function(req, res){
+	Campground.findById(req.params.id, function(err, foundCampground){
+		if(err){
+			res.redirect("/campgrounds");
+		} else {
+			res.render("campgrounds/edit", {campground: foundCampground});
+		}
+	});
+});
+
+
+//Update Campground Route
+
+router.put("/:id", function(req, res){
+	Campground.findByIdAndUpdate(req.params.id, req.body.campground, function(err, updatedCampground){
+		if(err){
+			res.redirect("/campgrounds");
+		} else {
+			res.redirect("/campgrounds/" + req.params.id);
+		}
+	});
+});
+
+//Middleware
 
 function isLoggedIn(req, res, next){
 	if(req.isAuthenticated()){
