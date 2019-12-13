@@ -21,7 +21,7 @@ mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
-mongoose.connect("mongodb://localhost/yelp_camp");
+mongoose.connect(process.env.DATABASEURL);
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.set("view engine", "ejs");
@@ -60,6 +60,6 @@ app.use("/campgrounds/:id/comments", commentRoutes);
 
 
 //starts the server
-app.listen(3000, function() { 
+app.listen(process.env.PORT || 3000, process.env.IP, function() { 
   console.log('The YelpCamp Server has started'); 
 });
