@@ -6,7 +6,7 @@ var middleware = require("../middleware");
 
 //Index - show all campgrounds
 
-router.get("/", function (req, res) {
+router.get("/", middleware.isLoggedIn, function (req, res) {
 
 	//Get all campgrounds from DB
 
@@ -50,7 +50,7 @@ router.get("/new", middleware.isLoggedIn, function (req, res) {
 });
 
 //SHOW - show more info about one campground
-router.get("/:id", function (req, res) {
+router.get("/:id", middleware.isLoggedIn, function (req, res) {
 	//find the campground with the provided ID
 	Campground.findById(req.params.id).populate("comments").exec(function (err, foundCampground) {
 		if (err) {
