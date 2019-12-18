@@ -21,7 +21,7 @@ mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
-mongoose.connect(process.env.DATABASEURL);
+mongoose.connect(process.env.DATABASEURL || 'mongodb://localhost/yelp_camp');
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.set("view engine", "ejs");
@@ -31,6 +31,8 @@ app.use(flash());
 
 
 //seedDB(); //seed the database
+
+app.locals.moment = require('moment'); //to add time instance to the campgrounds/comments
 
 //Passport Configuration
 app.use(require("express-session")({
