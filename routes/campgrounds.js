@@ -53,66 +53,39 @@ router.get("/", middleware.isLoggedIn, function(req, res) {
 
 router.post("/", middleware.isLoggedIn, function(req, res) {
 	//get data from form and add to campgrounds array
-
-
 		var author = {
     id: req.user._id,
     username: req.user.username
-		};
-
-	upload(req, res, (err) => {
-		if(err){
-			console.log(err);
-	} else {
-
-		var newCampground = {
-		  name: req.body.campground.name,
-		  image: req.file.path,
-		  description: req.body.campground.description,
-		  author: author
-		};
-		
-		Campground.create(newCampground, function(err, newlyCreated) {
-    if (err) {
-      console.log(err);
-    } else {
-      //redirect back to campgrounds page
-      console.log(newlyCreated);
-      res.redirect("/campgrounds");
-    }
-  });
-
-
-	}
-	}
-	
-
-	
-  // var newCampground = {
-  //   name: name,
-  //   image: image,
-  //   description: desc,
-  //   author: author
-  // };
-
-  //Create a new campground and save to DB
-
-  // Campground.create(newCampground, function(err, newlyCreated) {
-  //   if (err) {
-  //     console.log(err);
-  //   } else {
-  //     //redirect back to campgrounds page
-  //     console.log(newlyCreated);
-  //     res.redirect("/campgrounds");
-  //   }
-  // });
-);
-
+    };
+    
+    upload(req, res, function (err) {
+      if (err) {
+        console.log(err);
+      } else {
+        var newCampground = {
+          name: req.body.campground.name,
+          image: `/uploads/${req.file.filename}`,
+          description: req.body.campground.description,
+          author: author
+        };
+        console.log(req.file.filename);
+        Campground.create(newCampground, function (err, newlyCreated) {
+          if (err) {
+            console.log(err);
+          } else {
+            //redirect back to campgrounds page
+            res.redirect("/campgrounds");
+          }
+        });
+      }
+    });
 });
+
 
 router.get("/new", middleware.isLoggedIn, function(req, res) {
   res.render("campgrounds/new");
 });
+
 
 //SHOW - show more info about one campground
 router.get("/:id", middleware.isLoggedIn, function(req, res) {
