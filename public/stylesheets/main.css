@@ -64,9 +64,8 @@
       padding: 9px;
   }
   
-  
   /* Campground show page delete button */
-  .delete-form {
+  #delete-form {
       display: inline-block;
   }
   
