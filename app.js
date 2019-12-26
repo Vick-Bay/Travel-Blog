@@ -6,22 +6,22 @@ var flash = require("connect-flash");
 var passport = require("passport");
 var LocalStrategy = require("passport-local");
 var methodOverride = require("method-override");
-var Campground = require("./models/campground");
+var Blog = require("./models/blog");
 var Comment = require("./models/comment");
 var User = require("./models/user")
-var seedDB = require("./seeds");
+// var seedDB = require("./seeds");
 var path = require('path');
 
 //Requiring routes
 var commentRoutes = require("./routes/comments");
-var campgroundRoutes = require("./routes/campgrounds");
+var blogRoutes = require("./routes/blogs");
 var indexRoutes = require("./routes/index");
 
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
-mongoose.connect(process.env.DATABASEURL || 'mongodb://localhost/yelp_camp');
+mongoose.connect(process.env.DATABASEURL || 'mongodb://localhost/blog');
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.set("view engine", "ejs");
@@ -32,11 +32,11 @@ app.use(flash());
 
 //seedDB(); //seed the database
 
-app.locals.moment = require('moment'); //to add time instance to the campgrounds/comments
+app.locals.moment = require('moment'); //to add time instance to the blogs/comments
 
 //Passport Configuration
 app.use(require("express-session")({
-	secret: "Once again this course is the best",
+	secret: "This website is good",
 	resave: false,
 	saveUninitialized: false
 }));
@@ -55,13 +55,13 @@ app.use(function(req, res, next){
 });
 
 app.use("/", indexRoutes);
-app.use("/campgrounds", campgroundRoutes);
-app.use("/campgrounds/:id/comments", commentRoutes);
+app.use("/blogs", blogRoutes);
+app.use("/blogs/:id/comments", commentRoutes);
 
 
 
 
 //starts the server
 app.listen(process.env.PORT || 3000, process.env.IP, function() { 
-  console.log('The YelpCamp Server has started'); 
+  console.log('The Blog Server has started'); 
 });

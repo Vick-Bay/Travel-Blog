@@ -2,17 +2,17 @@
 <div class="row">
   <div class="col-md-9">
     <div class="card mb-3">
-      <img class="card-img-top" src="<%= campground.image %>" alt="<%= campground.name %>">
+      <img class="card-img-top" src="<%= blog.image %>" alt="<%= blog.name %>">
       <div class="card-body">
-        <h5 class="card-title"><%= campground.name %></h5>
+        <h5 class="card-title"><%= blog.name %></h5>
         <p>
-          <em>Submitted by: <%= campground.author.username %>, <%= moment(campground.createdAt).fromNow() %></em>
+          <em>Submitted by: <%= blog.author.username %>, <%= moment(blog.createdAt).fromNow() %></em>
         </p>
         <hr>
-        <p class="card-text"><%= campground.description %></p>
-        <% if(currentUser && campground.author.id.equals(currentUser._id)){ %>
-        <a class="btn btn-outline-warning" href="/campgrounds/<%= campground._id %>/edit">Edit</a>
-        <form action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST" id="delete-form">
+        <p class="card-text"><%= blog.description %></p>
+        <% if(currentUser && blog.author.id.equals(currentUser._id)){ %>
+        <a class="btn btn-outline-warning" href="/blogs/<%= blog._id %>/edit">Edit</a>
+        <form action="/blogs/<%= blog._id %>?_method=DELETE" method="POST" id="delete-form">
           <button class="btn btn-outline-danger">Delete</button>
         </form>
         <% } %>
@@ -22,11 +22,11 @@
     <div class="card">
       <div class="card-body">
         <div class="text-right">
-          <a class="btn btn-outline-success" href="/campgrounds/<%= campground._id %>/comments/new">Add New Comment</a>
+          <a class="btn btn-outline-success" href="/blogs/<%= blog._id %>/comments/new">Add New Comment</a>
         </div>
         <br>
         <div class="row">
-        <% campground.comments.forEach(function(comment){ %>
+        <% blog.comments.forEach(function(comment){ %>
           <div class="col-md-12 mb-2">
             <div class="card">
               <div class="card-body">
@@ -39,8 +39,8 @@
                   
                   <% if(currentUser && comment.author.id.equals(currentUser._id)){ %>
                   <div class="float-right">
-                    <a href="/campgrounds/<%=campground._id%>/comments/<%=comment._id%>/edit" class="btn btn-sm btn-outline-warning">EDIT</a>
-                    <form id="delete-form" action="/campgrounds/<%=campground._id%>/comments/<%=comment._id%>?_method=DELETE" method="POST">
+                    <a href="/blogs/<%=blog._id%>/comments/<%=comment._id%>/edit" class="btn btn-sm btn-outline-warning">EDIT</a>
+                    <form id="delete-form" action="/blogs/<%=blog._id%>/comments/<%=comment._id%>?_method=DELETE" method="POST">
                       <button class="btn btn-sm btn-outline-danger">DELETE</button>
                     </form>
                   </div>
