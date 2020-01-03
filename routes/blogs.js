@@ -20,33 +20,45 @@ var upload = multer({ storage: storage, fileFilter: imageFilter}).single('image'
 
 //Index - show all blogs
 
-router.get("/", middleware.isLoggedIn, function(req, res) {
+router.get("/", middleware.isLoggedIn, function (req, res) {
+  //search feature
   if (req.query.search) {
-		const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-    //Get all blogs from DB
-    Blog.find({name: regex}, function(err, allBlogs) {
+    const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+    //Get all blogs from DB after search
+    Blog.find({ name: regex }, function (err, allBlogs) {
       if (err) {
         console.log(err);
       } else {
-        res.render("blogs/index", {
-          blogs: allBlogs,
-          page: "blogs"
+        Comment.find({}, function (err, foundComment) {
+          if (err) {
+            res.redirect("back");
+          } else {
+            res.render("blogs/index", {
+              blogs: allBlogs,
+              page: "Blogs",
+              comments: foundComment
+            });
+          }
         });
       }
     });
   } else {
     //Get all blogs from DB
-    Blog.find({}, function(err, allBlogs) {
-      if (err) {
-        console.log(err);
-      } else {
-        res.render("blogs/index", {
-          blogs: allBlogs,
-          page: "Blogs"
-        });
-      }
-    });
-  }
+    Blog.find({}, function (err, allBlogs) {
+      Comment.find({}, function (err, foundComment) {
+        if (err) {
+          res.redirect("back");
+        } else {
+          res.render("blogs/index", {
+            blogs: allBlogs,
+            page: "Blogs",
+            comments: foundComment
+          });
+        }
+      });
+    }
+    );
+  };
 });
 
 //Create - add new blog to DB
