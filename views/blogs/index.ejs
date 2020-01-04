@@ -27,10 +27,16 @@
 									<h5 class="card-title"><%= blog.name %></h5>
 									<a href="/blogs/<%= blog._id %>" class="btn btn-outline-primary">More Info</a>
 									<% var	i = 0; %>
-									<% comments.forEach(function(comment){ %>
+									<% blog.comments.forEach(function(comment){ %>
 										<% i++ %>
-									<% }); %>
-										<p><small><%= i %> comments</small></p>
+									<% }); %>									
+									<% if (i === 0) { %>
+										 <p><small>No comments yet!</small></p>
+										<% } else if (i === 1) { %>	
+										 <p><small>1 comment</small></p>	
+										<% } else { %>	
+											<p><small><%= i %> comments</small></p>	
+											<% }; %>
 								</div>
 							</div>
 					</div>

@@ -3,102 +3,88 @@ var router = express.Router();
 var Blog = require("../models/blog");
 var middleware = require("../middleware");
 var Comment = require("../models/comment");
-var multer = require('multer');
+var multer = require("multer");
 var storage = multer.diskStorage({
-	 	destination: './public/uploads',
-	  filename: function(req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname);
+  destination: "./public/uploads",
+  filename: function(req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
   }
 });
-var imageFilter = function (req, file, cb) {
-    // accept image files only
-    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
-        return cb(new Error('Only image files are allowed!'), false);
-    }
-    cb(null, true);
+var imageFilter = function(req, file, cb) {
+  // accept image files only
+  if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+    return cb(new Error("Only image files are allowed!"), false);
+  }
+  cb(null, true);
 };
-var upload = multer({ storage: storage, fileFilter: imageFilter}).single('image');
+var upload = multer({ storage: storage, fileFilter: imageFilter }).single(
+  "image"
+);
 
 //Index - show all blogs
 
-router.get("/", middleware.isLoggedIn, function (req, res) {
+router.get("/", middleware.isLoggedIn, function(req, res) {
   //search feature
   if (req.query.search) {
-    const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+    const regex = new RegExp(escapeRegex(req.query.search), "gi");
     //Get all blogs from DB after search
-    Blog.find({ name: regex }, function (err, allBlogs) {
-      if (err) {
-        console.log(err);
-      } else {
-        Comment.find({}, function (err, foundComment) {
-          if (err) {
-            res.redirect("back");
-          } else {
-            res.render("blogs/index", {
-              blogs: allBlogs,
-              page: "Blogs",
-              comments: foundComment
-            });
-          }
-        });
-      }
-    });
-  } else {
-    //Get all blogs from DB
-    Blog.find({}, function (err, allBlogs) {
-      Comment.find({}, function (err, foundComment) {
+    Blog.find({ name: regex })
+      .populate("comments")
+      .exec(function(err, allBlogs) {
         if (err) {
-          res.redirect("back");
+          console.log(err);
         } else {
-          res.render("blogs/index", {
-            blogs: allBlogs,
-            page: "Blogs",
-            comments: foundComment
-          });
+          res.render("blogs/index", { blogs: allBlogs });
         }
       });
-    }
-    );
-  };
+  } else {
+    //Get all blogs from DB
+    Blog.find({})
+      .populate("comments")
+      .exec(function(err, allBlogs) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.render("blogs/index", { blogs: allBlogs });
+        }
+      });
+  }
 });
 
 //Create - add new blog to DB
 
 router.post("/", middleware.isLoggedIn, function(req, res) {
-	//get data from form and add to blogs array
-		var author = {
+  //get data from form and add to blogs array
+  var author = {
     id: req.user._id,
     username: req.user.username
-    };
-    
-    upload(req, res, function (err) {
-      if (err) {
-        console.log(err);
-      } else {
-        var newBlog = {
-          name: req.body.blog.name,
-          image: `/uploads/${req.file.filename}`,
-          description: req.body.blog.description,
-          author: author
-        };
-        console.log(req.file.filename);
-        Blog.create(newBlog, function (err, newlyCreated) {
-          if (err) {
-            console.log(err);
-          } else {
-            //redirect back to blogs page
-            res.redirect("/blogs");
-          }
-        });
-      }
-    });
-});
+  };
 
+  upload(req, res, function(err) {
+    if (err) {
+      console.log(err);
+    } else {
+      var newBlog = {
+        name: req.body.blog.name,
+        image: `/uploads/${req.file.filename}`,
+        description: req.body.blog.description,
+        author: author
+      };
+      Blog.create(newBlog, function(err, newlyCreated) {
+        if (err) {
+          console.log(err);
+        } else {
+          //redirect back to blogs page
+          res.redirect("/blogs");
+        }
+      });
+    }
+  });
+});
 
 router.get("/new", middleware.isLoggedIn, function(req, res) {
   res.render("blogs/new");
 });
-
 
 //SHOW - show more info about one blog
 router.get("/:id", middleware.isLoggedIn, function(req, res) {
@@ -110,17 +96,13 @@ router.get("/:id", middleware.isLoggedIn, function(req, res) {
         console.log(err);
       } else {
         //render show template with that blog
-        console.log(foundBlog);
         res.render("blogs/show", { blog: foundBlog });
       }
     });
 });
 
 //Edit Blog Route
-router.get("/:id/edit", middleware.checkBlogOwnership, function(
-  req,
-  res
-) {
+router.get("/:id/edit", middleware.checkBlogOwnership, function(req, res) {
   Blog.findById(req.params.id, function(err, foundBlog) {
     res.render("blogs/edit", { blog: foundBlog });
   });
@@ -129,10 +111,7 @@ router.get("/:id/edit", middleware.checkBlogOwnership, function(
 //Update Blog Route
 
 router.put("/:id", middleware.checkBlogOwnership, function(req, res) {
-  Blog.findByIdAndUpdate(req.params.id, req.body.blog, function(
-    err,
-    updatedBlog
-  ) {
+  Blog.findByIdAndUpdate(req.params.id, req.body.blog, function( err, updatedBlog) {
     if (err) {
       res.redirect("/blogs");
     } else {
@@ -153,7 +132,7 @@ router.delete("/:id", middleware.checkBlogOwnership, function(req, res) {
 });
 
 function escapeRegex(text) {
-	return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-};
+  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}
 
 module.exports = router;

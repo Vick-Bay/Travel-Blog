@@ -38,7 +38,6 @@ router.post("/", middleware.isLoggedIn, function(req, res){
 						comment.save();
 						blog.comments.push(comment);
 						blog.save();
-						console.log(comment);
 						req.flash("success","Successfully added comment")
 						res.redirect('/blogs/' + blog._id);
 					}
