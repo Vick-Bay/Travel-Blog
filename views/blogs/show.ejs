@@ -11,48 +11,124 @@
         <hr>
         <p class="card-text"><%= blog.description %></p>
         <% if(currentUser && blog.author.id.equals(currentUser._id)){ %>
-        <a class="btn btn-outline-warning" href="/blogs/<%= blog._id %>/edit">Edit</a>
+        <a class="btn btn-outline-info btn-sm" href="/blogs/<%= blog._id %>/edit"><span class="fa fa-edit" aria-hidden="true"></span></a>
         <form action="/blogs/<%= blog._id %>?_method=DELETE" method="POST" id="delete-form">
-          <button class="btn btn-outline-danger">Delete</button>
+          <button class="btn btn-outline-danger btn-sm"><span class="fa fa-trash" aria-hidden="true"></span></button>
         </form>
         <% } %>
       </div>
     </div>
-    
-    <div class="card">
+
+    <div class="card bg-light">
+      <!--Setting up the add new comment button that is used for collapsing-->
       <div class="card-body">
         <div class="text-right">
-          <a class="btn btn-outline-success" href="/blogs/<%= blog._id %>/comments/new">Add New Comment</a>
+          <a class="btn btn-outline-info btn-sm" role="button" data-toggle="collapse" href="#collapseComment"
+            aria-expanded="false" aria-controls="collapseComment" onclick="this.blur()"><span class="fa fa-plus fa-fw" aria-hidden="true"></span>  New Comment</a>
         </div>
         <br>
-        <div class="row">
-        <% blog.comments.forEach(function(comment){ %>
-          <div class="col-md-12 mb-2">
-            <div class="card">
-              <div class="card-body">
-                <div class="float-left">
-                  <p class="card-title font-weight-bold"><%= comment.author.username %></p>
-                  <p class="card-text"><%= comment.text %></p>
-                </div>
-                <div class="float-right">
-                  <p><%= moment(comment.createdAt).fromNow() %></p>
-                  
-                  <% if(currentUser && comment.author.id.equals(currentUser._id)){ %>
-                  <div class="float-right">
-                    <a href="/blogs/<%=blog._id%>/comments/<%=comment._id%>/edit" class="btn btn-sm btn-outline-warning">EDIT</a>
-                    <form id="delete-form" action="/blogs/<%=blog._id%>/comments/<%=comment._id%>?_method=DELETE" method="POST">
-                      <button class="btn btn-sm btn-outline-danger">DELETE</button>
-                    </form>
-                  </div>
-                  <% } %>
-                </div>
+        <!--Comment section title-->
+        <h6><strong>Comments  <span class="fa fa-comment fa-fw" aria-hidden="true"></span></strong></h6>
+
+        <!--Collapse Add a comment form START-->
+        <div class="collapse" id="collapseComment">
+          <div class="card">
+            <div class="card-body">
+            <h6>Write your comment <span class="fa fa-pencil fa-fw" aria-hidden="true"></span></h6>
+            <form id="add-comment-form" action="/blogs/<%= blog._id %>/comments" method="POST">
+              <div class="form-group">
+                <input class="form-control" type="text" disabled value="<%= currentUser.username %>">
               </div>
+              <div class="form-group">
+                <textarea class="form-control" name="comment[text]" placeholder="Write your comment..."
+                  form="add-comment-form" rows="5" cols="70"></textarea>
+              </div>
+              <div class="form-group">
+                <button class="btn btn-outline-info btn-sm">Comment <span class="fa fa-comment fa-fw"
+                    aria-hidden="true"></span></button>
+              </div>
+            </form>
             </div>
           </div>
-        <% }) %>
         </div>
-      </div>
-    </div>
+        <!--Collapse Add a comment form END-->
+        <hr>
+
+        <!--Check if there are comments, if there are none say no comments.-->
+        <% if (blog.comments.length === 0) { %>
+        <em style="color: grey;">No comments yet.</em>
+        <% } %>
+
+        <!--Display comments by looping through them-->
+
+        <% blog.comments.forEach(function(comment){ %>
+        <div class="col-md-12 mb-2">
+          <div class="card">
+            <div class="card-body">
+
+              <strong>
+                <% if (currentUser && currentUser._id.equals(comment.author.id)) { %>
+                <!--If the current user owns the comment, change the color of the user icon-->
+                <span style="color: rgb(110, 226, 110);" class="fa fa-user fa-fw" aria-hidden="true"></span>
+                <% } else { %>
+                <!--Else just display it black-->
+                <span class="fa fa-user fa-fw" aria-hidden="true"></span>
+                <% } %>
+                <!--Print out the author username-->
+                <%= comment.author.username %>
+              </strong>
+
+
+              <!--Show when the comment was made-->
+              <span class="float-right"><%= moment(comment.createdAt).fromNow() %></span>
+
+              <!--Printing the comment-->
+              <p class="card-text"><%= comment.text %></p>
+
+              <!--If the visitor is logged in and the owner of the comment, show the edit and delete buttons-->
+              <% if(currentUser && comment.author.id.equals(currentUser._id)) { %>
+
+              <!--Edit button used for collapsing the edit comment form-->
+              <a class="btn btn-xs btn-outline-info btn-sm" onclick="this.blur()" role="button" data-toggle="collapse"
+                href="#collapseEdit<%= comment._id %>" aria-expanded="false"
+                aria-controls="collapse<%= comment._id %>"><span class="fa fa-edit" aria-hidden="true"></span></a>
+
+              <!--Delete comment button-->
+              <form id="delete-form" action="/blogs/<%= blog._id %>/comments/<%= comment._id %>?_method=DELETE"
+                method="POST" style="display: inline;">
+                <button class="btn btn-xs btn-outline-danger btn-sm"><span class="fa fa-trash" aria-hidden="true"></span></button>
+              </form>
+
+
+              <!--Edit comment form-->
+              <div class="collapse" id="collapseEdit<%= comment._id %>">
+                <div class="card">
+                  <div class="card-body">
+                    <h4>Edit your comment <span class="fa fa-edit fa-fw" aria-hidden="true"></span></h4>
+
+                    <form id="edit-comment-form<%= comment._id %>"
+                      action="/blogs/<%= blog._id %>/comments/<%= comment._id %>?_method=PUT" method="POST">
+                      <div class="form-group">
+                        <input class="form-control" type="text" disabled value="<%= currentUser.username %>">
+                      </div>
+                      <div class="form-group">
+                        <textarea class="form-control" name="comment[text]" placeholder="Your comment text..."
+                          form="edit-comment-form<%= comment._id %>" rows="5" cols="70"><%= comment.text %></textarea>
+                      </div>
+                      <div class="form-group">
+                        <button class="btn btn-outline-info btn-sm">Save <span class="fa fa-share-square fa-fw"
+                            aria-hidden="true"></span></button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+  </div>
   </div>
 </div>
 
