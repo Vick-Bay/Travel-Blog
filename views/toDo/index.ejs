@@ -1,0 +1,72 @@
+<% include ../partials/header %>
+
+<div class="toDo">
+
+	<div class="jumbotron">
+		<h2 class="hd1">Our Travel Plan</h2>
+		<p>Add item to plan:</p>
+		<form action="/toDos" method="POST">
+			<div class="form-group">
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-4">
+							<label for="date">Date:</label>
+							<div class="datepicker date input-group p-0 shadow-sm">
+								<input type="text" placeholder="Date" class="form-control" name="date">
+								<div class="input-group-append"><span class="input-group-text px-4"><i class="fa fa-clock-o"></i></span></div>
+							</div>
+							<!-- <input type="text" placeholder="Date" class="form-control" name="date"> -->
+						</div>
+
+						<div class="col-sm-8">
+							<label for="item">Planned Item:</label>
+							<input type="text" placeholder="Planned Item" class="form-control" name="toDo">
+						</div>
+					</div>
+
+					<br>
+
+					<div>
+						<input type="submit" value="Add" class="btn btn-primary">
+					</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div class="panel panel-primary">
+	<div class="panel-heading text-center">
+		<h4>Travel Plan</h4>
+	</div>
+	<table class="table table-striped table-hover table-bordered">
+		<tr class="info">
+			<th>Date</th>
+			<th>Planned Item</th>
+			<th>Edit / Delete</th>
+		</tr>
+		<% toDos.forEach(function(toDo) { %>
+			<tr>
+				<% if(toDo.isCompleted) { %>
+					<td class="td-completed"><%= moment(toDo.date).format( 'DD-MMM-YYYY') %></td>
+					<td class="td-completed"><%= toDo.toDo %> </td>
+				<% } else { %>
+					<td><%= moment(toDo.date).format( 'DD-MMM-YYYY') %></td>
+					<td><%= toDo.toDo %></td>
+				<% } %>
+				<td>
+					<a class="btn btn-sm btn-outline-info" role="button" href="/toDos/<%= toDo._id %>/edit"><span class="fa fa-edit" aria-hidden="true"></span></a>
+					<form action="/toDos/<%= toDo._id %>?_method=DELETE" method="POST" id="delete-form">
+						<button class="btn btn-sm btn-outline-danger"><span class="fa fa-trash" aria-hidden="true"></span></button>
+					</form>				
+				</td>
+			</tr>
+		<% }); %>
+	</table>
+</div>
+
+</div>
+
+
+<% include ../partials/footer %>

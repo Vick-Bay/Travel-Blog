@@ -1,0 +1,42 @@
+<% include ../partials/header %>
+
+<div class="toDo">
+
+    <div class="jumbotron">
+        <h2 class="hd1">Our Travel Plan</h2>
+        <p>Update item:</p>
+        <form action="/toDos/<%=toDo._id%>?_method=PUT" method="POST">
+            <div class="form-group">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="date">Date:</label>
+
+                            <div class="datepicker date input-group p-0 shadow-sm">
+								<input type="text" placeholder="Date" class="form-control" name="toDo[date]" value="<%= moment(toDo.date).format( 'DD-MMM-YYYY') %>">
+								<div class="input-group-append"><span class="input-group-text px-4"><i class="fa fa-clock-o"></i></span></div>
+							</div>
+                            <!-- <input type="text" class="form-control" name="toDo[date]"
+                                value="<%= moment(toDo.date).format( 'DD-MMM-YYYY') %>"> -->
+                        </div>
+
+                        <div class="col-sm-8">
+                            <label for="item">Planned Item:</label>
+                            <input type="text" class="form-control" name="toDo[toDo]" value="<%= toDo.toDo %>">
+                        </div>
+                    </div>
+
+                    <div class="checkbox">
+                        <label><input name="status" type="checkbox" value="checked">Mark as Completed</label>
+                    </div>
+
+                    <div>
+                        <input type="submit" value="Update" class="btn btn-primary">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<% include ../partials/footer %>

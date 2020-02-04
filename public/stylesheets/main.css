@@ -1,3 +1,5 @@
+/* Login Page */
+
 .form-signin {
   width: 100%;
   max-width: 330px;
@@ -97,3 +99,49 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', end
     color:#fff;
  
 }
+
+/* To Do list CSS */
+
+.toDo {
+  color:#fff;
+}
+
+.toDo table th{
+	text-align: center;
+}
+
+/*center table rows */
+.toDo table td {
+	text-align: center;
+}
+
+.td-completed {
+  color: green;
+  text-decoration: line-through;
+}
+
+
+
+/*
+*
+* ==========================================
+* CUSTOM UTIL CLASSES FOR DATE PICKER
+* ==========================================
+*
+*/
+.datepicker td, .datepicker th {
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 0.85rem;
+}
+
+.datepicker {
+  margin-bottom: 3rem;
+}
+
+.datepicker-dropdown {
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+

@@ -7,6 +7,7 @@ var passport = require("passport");
 var LocalStrategy = require("passport-local");
 var methodOverride = require("method-override");
 var Blog = require("./models/blog");
+var ToDo = require("./models/toDo")
 var Comment = require("./models/comment");
 var User = require("./models/user")
 // var seedDB = require("./seeds");
@@ -16,6 +17,7 @@ var path = require('path');
 var commentRoutes = require("./routes/comments");
 var blogRoutes = require("./routes/blogs");
 var indexRoutes = require("./routes/index");
+var toDoRoutes = require("./routes/toDos");
 
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
@@ -57,6 +59,7 @@ app.use(function(req, res, next){
 app.use("/", indexRoutes);
 app.use("/blogs", blogRoutes);
 app.use("/blogs/:id/comments", commentRoutes);
+app.use("/toDos", toDoRoutes);
 
 
 

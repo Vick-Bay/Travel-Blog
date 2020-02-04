@@ -2,7 +2,6 @@ var express = require("express");
 var router = express.Router();
 var Blog = require("../models/blog");
 var middleware = require("../middleware");
-var Comment = require("../models/comment");
 var multer = require("multer");
 var storage = multer.diskStorage({
   destination: "./public/uploads",
