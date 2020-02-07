@@ -32,4 +32,4 @@ function sortTable(e) {
   }
   
   document.querySelector('#sortTable')
-    .addEventListener('click', sortTable, false);
+    .addEventListener('click', sortTable(e), false);
