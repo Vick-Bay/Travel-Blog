@@ -10,7 +10,6 @@ var Blog = require("./models/blog");
 var ToDo = require("./models/toDo")
 var Comment = require("./models/comment");
 var User = require("./models/user")
-// var seedDB = require("./seeds");
 var path = require('path');
 
 //Requiring routes
@@ -25,14 +24,11 @@ mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
 mongoose.connect(process.env.DATABASEURL || 'mongodb://localhost/blog');
 
-app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static(path.resolve('./public')));
 app.use(methodOverride("_method"));
 app.use(flash());
-
-
-//seedDB(); //seed the database
 
 app.locals.moment = require('moment'); //to add time instance to the blogs/comments
 
@@ -49,7 +45,7 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.use(function(req, res, next){
+app.use(function (req, res, next) {
 	res.locals.currentUser = req.user;
 	res.locals.error = req.flash("error");
 	res.locals.success = req.flash("success");
@@ -62,9 +58,7 @@ app.use("/blogs/:id/comments", commentRoutes);
 app.use("/toDos", toDoRoutes);
 
 
-
-
 //starts the server
-app.listen(process.env.PORT || 3000, process.env.IP, function() { 
-  console.log('The Blog Server has started'); 
+app.listen(process.env.PORT || 3000, process.env.IP, function () {
+	console.log('The Blog Server has started');
 });
